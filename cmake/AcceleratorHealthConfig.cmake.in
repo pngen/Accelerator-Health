@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+include("${CMAKE_CURRENT_LIST_DIR}/AcceleratorHealthTargets.cmake")
+if(NOT TARGET AcceleratorHealth::AcceleratorHealth)
+  add_library(AcceleratorHealth::AcceleratorHealth ALIAS AcceleratorHealth::accelerator_health)
+endif()
+check_required_components(AcceleratorHealth)

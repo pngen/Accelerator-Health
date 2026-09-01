@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.24)
+project(accelerator_health_consumer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(AcceleratorHealth CONFIG REQUIRED)
+add_executable(ahc-consumer main.cpp)
+target_link_libraries(ahc-consumer PRIVATE AcceleratorHealth::AcceleratorHealth)

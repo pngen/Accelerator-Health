@@ -1,0 +1,27 @@
+# Copyright 2026 Summon Software Labs
+# Licensed under the Apache License, Version 2.0 (the "License"); see LICENSE.
+
+function(ah_add_test tname src)
+  set(target ah_test_${tname})
+  add_executable(${target} ${src})
+  target_link_libraries(${target} PRIVATE AcceleratorHealth::AcceleratorHealth)
+  ah_cxx_flags(${target})
+  target_compile_definitions(${target} PRIVATE AH_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
+  add_test(NAME ${tname} COMMAND ${target})
+endfunction()
+
+ah_add_test(test_core test_core.cpp)
+ah_add_test(test_ids test_ids.cpp)
+ah_add_test(test_state test_state.cpp)
+ah_add_test(test_assess test_assess.cpp)
+ah_add_test(test_history test_history.cpp)
+ah_add_test(test_persistence test_persistence.cpp)
+ah_add_test(test_fault test_fault.cpp)
+ah_add_test(test_protocol test_protocol.cpp)
+ah_add_test(test_concurrency test_concurrency.cpp)
+add_test(NAME test_distributed COMMAND pwsh -NoProfile -File ${CMAKE_CURRENT_SOURCE_DIR}/test_distributed.ps1 -BuildDir ${CMAKE_BINARY_DIR})
+add_test(NAME test_package COMMAND pwsh -NoProfile -File ${CMAKE_CURRENT_SOURCE_DIR}/test_package.ps1 -BuildDir ${CMAKE_BINARY_DIR})
+if(AH_HAS_CUDA)
+  ah_add_test(test_cuda test_cuda.cpp)
+  target_link_libraries(ah_test_test_cuda PRIVATE AcceleratorHealth::Cuda)
+endif()
