@@ -30,7 +30,11 @@ int main(){
   ValidationRecord v; v.id=ValidationRunId{1};v.accelerator=id;v.timestamp=Timestamp{2};v.profile=ValidationProfile::FULL;v.depth=ValidationDepth::FULL;v.passed=true;v.worker=WorkerId{10};v.workerBootId=WorkerBootId{100}; s.recordValidation(v);
 
   const int N=100000;
+#ifdef NDEBUG
+  std::printf("benchmark: accelerator-health (fake backend), Release\n");
+#else
   std::printf("benchmark: accelerator-health (fake backend), Debug\n");
+#endif
   std::printf("  observation ingestion     : %6.3f us/op\n", usPerOp(N,[&](int i){ AcceleratorObservation oo=o; oo.observationGeneration=ObservationGeneration{static_cast<std::uint64_t>(i+1)}; s.acceptObservation(oo,e);}));
   std::printf("  health assessment (snapshot): %6.3f us/op\n", usPerOp(N,[&](int){ (void)s.snapshot(id);}));
   std::printf("  indexed lookup (health)    : %6.3f us/op\n", usPerOp(N,[&](int){ (void)s.byHealthState(HealthState::HEALTHY);}));
